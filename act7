@@ -1,0 +1,188 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+const int MAX_ALUMNOS = 100;
+
+void registrarAlumno(string nombres[], int edades[], double promedios[], int &cantidad);
+void mostrarTodos(string nombres[], int edades[], double promedios[], int cantidad);
+int buscarAlumno(string nombres[], int cantidad, string nombre);
+void modificarAlumno(string nombres[], int edades[], double promedios[], int cantidad);
+void eliminarAlumno(string nombres[], int edades[], double promedios[], int &cantidad);
+void intercambiarAlumnos(string nombres[], int edades[], double promedios[], int cantidad, int a, int b);
+
+int main() {
+    string nombres[MAX_ALUMNOS];
+    int edades[MAX_ALUMNOS];
+    double promedios[MAX_ALUMNOS];
+    int cantidad = 0;
+    int opcion;
+
+    do {
+        cout << "\n=== MENU DE GESTION DE ALUMNOS ===" << endl;
+        cout << "1. Registrar Alumno" << endl;
+        cout << "2. Mostrar Todos los Alumnos" << endl;
+        cout << "3. Buscar Alumno" << endl;
+        cout << "4. Modificar Alumno" << endl;
+        cout << "5. Eliminar Alumno" << endl;
+        cout << "6. Intercambiar dos Alumnos" << endl;
+        cout << "7. Salir" << endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+        cin.ignore();
+
+        switch (opcion) {
+            case 1:
+                registrarAlumno(nombres, edades, promedios, cantidad);
+                break;
+            case 2:
+                mostrarTodos(nombres, edades, promedios, cantidad);
+                break;
+            case 3: {
+                string nombreBuscar;
+                cout << "Ingrese el nombre a buscar: ";
+                getline(cin, nombreBuscar);
+                int pos = buscarAlumno(nombres, cantidad, nombreBuscar);
+                if (pos != -1) {
+                    cout << "Alumno encontrado en el indice " << pos << ":" << endl;
+                    cout << "Nombre: " << nombres[pos] << " | Edad: " << edades[pos] << " | Promedio: " << promedios[pos] << endl;
+                } else {
+                    cout << "Alumno no encontrado." << endl;
+                }
+                break;
+            }
+            case 4:
+                modificarAlumno(nombres, edades, promedios, cantidad);
+                break;
+            case 5:
+                eliminarAlumno(nombres, edades, promedios, cantidad);
+                break;
+            case 6: {
+                if (cantidad < 2) {
+                    cout << "Se necesitan al menos 2 alumnos para realizar un intercambio." << endl;
+                } else {
+                    int i, j;
+                    mostrarTodos(nombres, edades, promedios, cantidad);
+                    cout << "Ingrese el indice del primer alumno a intercambiar: ";
+                    cin >> i;
+                    cout << "Ingrese el indice del segundo alumno a intercambiar: ";
+                    cin >> j;
+                    intercambiarAlumnos(nombres, edades, promedios, cantidad, i, j);
+                }
+                break;
+            }
+            case 7:
+                cout << "Saliendo del programa..." << endl;
+                break;
+            default:
+                cout << "Opcion invalida. Intente de nuevo." << endl;
+        }
+    } while (opcion != 7);
+
+    return 0;
+}
+
+void registrarAlumno(string nombres[], int edades[], double promedios[], int &cantidad) {
+    if (cantidad >= MAX_ALUMNOS) {
+        cout << "Error: Limite de alumnos alcanzado." << endl;
+        return;
+    }
+    cout << "\n--- Registrar Alumno ---" << endl;
+    cout << "Nombre: ";
+    getline(cin, nombres[cantidad]);
+    cout << "Edad: ";
+    cin >> edades[cantidad];
+    cout << "Promedio: ";
+    cin >> promedios[cantidad];
+    cin.ignore();
+
+    cantidad++;
+    cout << "Alumno registrado exitosamente." << endl;
+}
+
+void mostrarTodos(string nombres[], int edades[], double promedios[], int cantidad) {
+    if (cantidad == 0) {
+        cout << "No hay alumnos registrados." << endl;
+        return;
+    }
+    cout << "\n--- Lista de Alumnos ---" << endl;
+    for (int i = 0; i < cantidad; i++) {
+        cout << "[" << i << "] Nombre: " << nombres[i] 
+             << " | Edad: " << edades[i] 
+             << " | Promedio: " << promedios[i] << endl;
+    }
+}
+
+int buscarAlumno(string nombres[], int cantidad, string nombre) {
+    for (int i = 0; i < cantidad; i++) {
+        if (nombres[i] == nombre) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void modificarAlumno(string nombres[], int edades[], double promedios[], int cantidad) {
+    string nombre;
+    cout << "\n--- Modificar Alumno ---" << endl;
+    cout << "Ingrese el nombre del alumno a modificar: ";
+    getline(cin, nombre);
+
+    int pos = buscarAlumno(nombres, cantidad, nombre);
+    if (pos != -1) {
+        cout << "Nuevo Nombre: ";
+        getline(cin, nombres[pos]);
+        cout << "Nueva Edad: ";
+        cin >> edades[pos];
+        cout << "Nuevo Promedio: ";
+        cin >> promedios[pos];
+        cin.ignore();
+        cout << "Datos modificados exitosamente." << endl;
+    } else {
+        cout << "Alumno no encontrado." << endl;
+    }
+}
+
+void eliminarAlumno(string nombres[], int edades[], double promedios[], int &cantidad) {
+    string nombre;
+    cout << "\n--- Eliminar Alumno ---" << endl;
+    cout << "Ingrese el nombre del alumno a eliminar: ";
+    getline(cin, nombre);
+
+    int pos = buscarAlumno(nombres, cantidad, nombre);
+    if (pos != -1) {
+        for (int i = pos; i < cantidad - 1; i++) {
+            nombres[i] = nombres[i + 1];
+            edades[i] = edades[i + 1];
+            promedios[i] = promedios[i + 1];
+        }
+        cantidad--;
+        cout << "Alumno eliminado exitosamente." << endl;
+    } else {
+        cout << "Alumno no encontrado." << endl;
+    }
+}
+
+void intercambiarAlumnos(string nombres[], int edades[], double promedios[], int cantidad, int a, int b) {
+    if (a < 0 || a >= cantidad || b < 0 || b >= cantidad) {
+        cout << "Error: Uno o ambos indices estan fuera del rango valido (0 a " << cantidad - 1 << ")." << endl;
+        return;
+    }
+
+    cout << "Se intercambiaran la posicion " << a << " con la posicion " << b << endl;
+
+    string nombre_temp = nombres[a];
+    int edad_temp = edades[a];
+    double promedio_temp = promedios[a];
+
+    nombres[a] = nombres[b];
+    edades[a] = edades[b];
+    promedios[a] = promedios[b];
+
+    nombres[b] = nombre_temp;
+    edades[b] = edad_temp;
+    promedios[b] = promedio_temp;
+
+    cout << "Alumnos intercambiados exitosamente." << endl;
+}
