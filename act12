@@ -1,0 +1,253 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Materia {
+private:
+    string nombre;
+    int creditos;
+
+public:
+    Materia() : nombre(""), creditos(0) {}
+    Materia(string n, int c) : nombre(n), creditos(c) {}
+
+    void setNombre(string n) { nombre = n; }
+    string getNombre() const { return nombre; }
+    void setCreditos(int c) { creditos = c; }
+    int getCreditos() const { return creditos; }
+
+    void mostrar() const {
+        cout << "Materia: " << nombre << " | Creditos: " << creditos << endl;
+    }
+};
+
+class Calificacion {
+private:
+    Materia materia;
+    float nota;
+
+public:
+    Calificacion() : nota(0.0) {}
+    Calificacion(Materia m, float n) : materia(m), nota(n) {}
+
+    void setMateria(Materia m) { materia = m; }
+    Materia getMateria() const { return materia; }
+    void setNota(float n) { nota = n; }
+    float getNota() const { return nota; }
+
+    void mostrar() const {
+        materia.mostrar();
+        cout << "Calificacion: " << nota << endl;
+    }
+};
+
+class Persona {
+protected:
+    string nombre;
+    int edad;
+
+public:
+    Persona() : nombre(""), edad(0) {}
+    Persona(string n, int e) : nombre(n), edad(e) {}
+    virtual ~Persona() {}
+
+    void setNombre(string n) { nombre = n; }
+    string getNombre() const { return nombre; }
+    void setEdad(int e) { edad = e; }
+    int getEdad() const { return edad; }
+
+    virtual void mostrar() const {
+        cout << "Nombre: " << nombre << endl;
+        cout << "Edad: " << edad << endl;
+    }
+};
+
+class Alumno : public Persona {
+private:
+    string matricula;
+    Calificacion calificaciones[10];
+    int numCalificaciones;
+
+public:
+    Alumno() : Persona(), matricula(""), numCalificaciones(0) {}
+    Alumno(string n, int e, string m) : Persona(n, e), matricula(m), numCalificaciones(0) {}
+
+    void setMatricula(string m) { matricula = m; }
+    string getMatricula() const { return matricula; }
+
+    void agregarCalificacion(const Calificacion& c) {
+        if (numCalificaciones < 10) {
+            calificaciones[numCalificaciones] = c;
+            numCalificaciones++;
+        } else {
+            cout << "No se pueden agregar mas calificaciones." << endl;
+        }
+    }
+
+    void mostrar() const override {
+        Persona::mostrar();
+        cout << "Matricula: " << matricula << endl;
+        cout << "--- Calificaciones ---" << endl;
+        if (numCalificaciones == 0) {
+            cout << "Sin calificaciones registradas." << endl;
+        } else {
+            for (int i = 0; i < numCalificaciones; i++) {
+                calificaciones[i].mostrar();
+            }
+        }
+    }
+};
+
+class Maestro : public Persona {
+private:
+    string especialidad;
+
+public:
+    Maestro() : Persona(), especialidad("") {}
+    Maestro(string n, int e, string esp) : Persona(n, e), especialidad(esp) {}
+
+    void setEspecialidad(string esp) { especialidad = esp; }
+    string getEspecialidad() const { return especialidad; }
+
+    void mostrar() const override {
+        Persona::mostrar();
+        cout << "Especialidad: " << especialidad << endl;
+    }
+};
+
+class Administrador : public Persona {
+private:
+    string departamento;
+
+public:
+    Administrador() : Persona(), departamento("") {}
+    Administrador(string n, int e, string dep) : Persona(n, e), departamento(dep) {}
+
+    void setDepartamento(string dep) { departamento = dep; }
+    string getDepartamento() const { return departamento; }
+
+    void mostrar() const override {
+        Persona::mostrar();
+        cout << "Departamento: " << departamento << endl;
+    }
+};
+
+int main() {
+    Persona* personas[100];
+    int numPersonas = 0;
+    int opcion = 0;
+
+    do {
+        cout << "\n=== MENU PRINCIPAL ===" << endl;
+        cout << "1. Registrar Persona" << endl;
+        cout << "2. Mostrar todas las Personas" << endl;
+        cout << "3. Salir" << endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        if (opcion == 1) {
+            if (numPersonas >= 100) {
+                cout << "Capacidad maxima alcanzada." << endl;
+                continue;
+            }
+
+            int tipo = 0;
+            cout << "\n--- TIPO DE PERSONA ---" << endl;
+            cout << "1. Alumno" << endl;
+            cout << "2. Maestro" << endl;
+            cout << "3. Administrador" << endl;
+            cout << "Seleccione el tipo: ";
+            cin >> tipo;
+
+            cin.ignore();
+            string nombre;
+            int edad;
+
+            cout << "Nombre: ";
+            getline(cin, nombre);
+            cout << "Edad: ";
+            cin >> edad;
+
+            if (tipo == 1) {
+                cin.ignore();
+                string matricula;
+                cout << "Matricula: ";
+                getline(cin, matricula);
+
+                Alumno* al = new Alumno(nombre, edad, matricula);
+
+                char resp;
+                cout << "Desea agregar calificaciones al alumno? (s/n): ";
+                cin >> resp;
+
+                while (resp == 's' || resp == 'S') {
+                    cin.ignore();
+                    string nomMat;
+                    int cred;
+                    float nota;
+
+                    cout << "Nombre de la materia: ";
+                    getline(cin, nomMat);
+                    cout << "Creditos de la materia: ";
+                    cin >> cred;
+                    cout << "Calificacion: ";
+                    cin >> nota;
+
+                    Materia m(nomMat, cred);
+                    Calificacion c(m, nota);
+                    al->agregarCalificacion(c);
+
+                    cout << "Desea agregar otra calificacion? (s/n): ";
+                    cin >> resp;
+                }
+
+                personas[numPersonas] = al;
+                numPersonas++;
+                cout << "Alumno registrado correctamente." << endl;
+
+            } else if (tipo == 2) {
+                cin.ignore();
+                string especialidad;
+                cout << "Especialidad: ";
+                getline(cin, especialidad);
+
+                personas[numPersonas] = new Maestro(nombre, edad, especialidad);
+                numPersonas++;
+                cout << "Maestro registrado correctamente." << endl;
+
+            } else if (tipo == 3) {
+                cin.ignore();
+                string departamento;
+                cout << "Departamento: ";
+                getline(cin, departamento);
+
+                personas[numPersonas] = new Administrador(nombre, edad, departamento);
+                numPersonas++;
+                cout << "Administrador registrado correctamente." << endl;
+
+            } else {
+                cout << "Tipo no valido." << endl;
+            }
+
+        } else if (opcion == 2) {
+            cout << "\n=== LISTA DE PERSONAS REGISTRADAS ===" << endl;
+            if (numPersonas == 0) {
+                cout << "No hay personas registradas." << endl;
+            } else {
+                for (int i = 0; i < numPersonas; i++) {
+                    cout << "\n--- Persona #" << (i + 1) << " ---" << endl;
+                    personas[i]->mostrar();
+                }
+            }
+        }
+
+    } while (opcion != 3);
+
+    for (int i = 0; i < numPersonas; i++) {
+        delete personas[i];
+    }
+
+    return 0;
+}
+
