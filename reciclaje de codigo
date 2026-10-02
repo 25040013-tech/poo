@@ -1,0 +1,69 @@
+#include <iostream>
+#include <string>
+#include <limits>
+
+using namespace std;
+
+//Persona
+class Persona {
+protected:
+    string nombre;
+    int edad;
+
+public:
+    Persona() : nombre("Sin Nombre"), edad(0) {}
+    Persona(const string &n, int e) : nombre(n), edad(e) {}
+    virtual ~Persona() {}
+
+    void capturarPersona() {
+        cout << "Ingrese el nombre: ";
+        getline(cin, nombre);
+        cout << "Ingrese la edad: ";
+        cin >> edad;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    void mostrarPersona() const {
+        cout << "Nombre: " << nombre << " | Edad: " << edad;
+    }
+
+    string getNombre() const { return nombre; }
+    void setNombre(const string &n) { nombre = n; }
+    int getEdad() const { return edad; }
+    void setEdad(int e) { edad = e; }
+};
+
+//Alumno 
+class Alumno : public Persona {
+private:
+    float promedio;
+
+public:
+    Alumno() : Persona(), promedio(0.0) {}
+    Alumno(const string &n, int e, float p) : Persona(n, e), promedio(p) {}
+
+    void capturar() {
+        capturarPersona();
+        cout << "Ingrese el promedio: ";
+        cin >> promedio;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+
+    void mostrar() const {
+        mostrarPersona();
+        cout << " | Promedio: " << promedio << endl;
+    }
+
+    float getPromedio() const { return promedio; }
+    void setPromedio(float p) { promedio = p; }
+};
+
+int main() {
+    Alumno a;
+    a.capturar();
+    a.mostrar();
+
+    return 0;
+}
+
+
