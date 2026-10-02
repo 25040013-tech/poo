@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+    int opcion;
+    
+   
+    string nombre;
+    int edad;
+    string carrera;
+    
+   
+    double cal1, cal2, cal3, promedio;
+
+    cout << "====================================" << endl;
+    cout << "       MENU DE OPCIONES - UTC       " << endl;
+    cout << "====================================" << endl;
+    cout << "1. Registrar Datos Personales" << endl;
+    cout << "2. Calcular Promedio de 3 Materias" << endl;
+    cout << "Seleccione una opcion (1 o 2): ";
+    cin >> opcion;
+
+    if (opcion == 1) {
+        
+        cin.ignore();
+        
+        cout << "\n--- REGISTRO DE DATOS ---" << endl;
+        cout << "Ingrese su Nombre: ";
+        getline(cin, nombre);
+        
+        cout << "Ingrese su Edad: ";
+        cin >> edad;
+        
+        cin.ignore();
+        cout << "Ingrese su Carrera: ";
+        getline(cin, carrera);
+        
+        
+        cout << "\n------------------------------------" << endl;
+        cout << "Bienvenido " << nombre << endl;
+        cout << "Edad: " << edad << endl;
+        cout << "Carrera: " << carrera << endl;
+        cout << "------------------------------------" << endl;
+        
+    } else if (opcion == 2) {
+        cout << "\n--- CALCULO DE PROMEDIO ---" << endl;
+        cout << "Ingrese la calificacion 1: ";
+        cin >> cal1;
+        
+        cout << "Ingrese la calificacion 2: ";
+        cin >> cal2;
+        
+        cout << "Ingrese la calificacion 3: ";
+        cin >> cal3;
+        
+       
+        promedio = (cal1 + cal2 + cal3) / 3.0;
+        
+        cout << "\n------------------------------------" << endl;
+        cout << "El promedio obtenido es: " << promedio << endl;
+        cout << "------------------------------------" << endl;
+        
+    } else {
+        cout << "\nOpcion no valida. Por favor ejecute de nuevo." << endl;
+    }
+
+    return 0;
+}
+
+
+
