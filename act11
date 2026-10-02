@@ -1,0 +1,371 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Materia {
+private:
+    string nombre;
+    string clave;
+    int creditos;
+
+public:
+    Materia() : nombre(""), clave(""), creditos(0) {}
+    Materia(string n, string c, int cr) : nombre(n), clave(c), creditos(cr) {}
+
+    void setNombre(string n) { nombre = n; }
+    void setClave(string c) { clave = c; }
+    void setCreditos(int cr) { creditos = cr; }
+
+    string getNombre() const { return nombre; }
+    string getClave() const { return clave; }
+    int getCreditos() const { return creditos; }
+
+    void mostrar() const {
+        cout << "Materia: " << nombre << " | Clave: " << clave << " | Creditos: " << creditos << endl;
+    }
+};
+
+class Calificacion {
+private:
+    string claveMateria;
+    float nota;
+    string periodo;
+
+public:
+    Calificacion() : claveMateria(""), nota(0.0f), periodo("") {}
+    Calificacion(string c, float n, string p = "2024-1") : claveMateria(c), nota(n), periodo(p) {}
+
+    void setClaveMateria(string c) { claveMateria = c; }
+    void setNota(float n) { nota = n; }
+    void setPeriodo(string p) { periodo = p; }
+
+    string getClaveMateria() const { return claveMateria; }
+    float getNota() const { return nota; }
+    string getPeriodo() const { return periodo; }
+
+    void mostrar() const {
+        cout << "Clave Materia: " << claveMateria << " | Nota: " << nota << " | Periodo: " << periodo << endl;
+    }
+};
+
+class Alumno {
+private:
+    string nombre;
+    int edad;
+    Materia materias[10];
+    Calificacion calificaciones[10];
+    int numMaterias;
+    int numCalificaciones;
+
+    int buscarMateriaPorClave(const string& clave) const {
+        for (int i = 0; i < numMaterias; i++) {
+            if (materias[i].getClave() == clave) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+public:
+    Alumno() : nombre(""), edad(0), numMaterias(0), numCalificaciones(0) {}
+    Alumno(string n, int e) : nombre(n), edad(e), numMaterias(0), numCalificaciones(0) {}
+
+    void setNombre(string n) { nombre = n; }
+    void setEdad(int e) { edad = e; }
+
+    string getNombre() const { return nombre; }
+    int getEdad() const { return edad; }
+    int getNumMaterias() const { return numMaterias; }
+    int getNumCalificaciones() const { return numCalificaciones; }
+
+    bool agregarMateria(const Materia& m) {
+        if (numMaterias >= 10) {
+            return false;
+        }
+        if (buscarMateriaPorClave(m.getClave()) != -1) {
+            return false;
+        }
+        materias[numMaterias] = m;
+        numMaterias++;
+        return true;
+    }
+
+    bool registrarCalificacion(const string& claveMateria, float nota, string periodo = "2024-1") {
+        if (numCalificaciones >= 10) {
+            return false;
+        }
+        if (buscarMateriaPorClave(claveMateria) == -1) {
+            return false;
+        }
+        if (nota < 0.0f || nota > 10.0f) {
+            return false;
+        }
+        calificaciones[numCalificaciones] = Calificacion(claveMateria, nota, periodo);
+        numCalificaciones++;
+        return true;
+    }
+
+    void mostrarHistorial() const {
+        cout << "\n=== HISTORIAL ACADEMICO DE " << nombre << " ===" << endl;
+        if (numMaterias == 0) {
+            cout << "No hay materias registradas." << endl;
+            return;
+        }
+        for (int i = 0; i < numMaterias; i++) {
+            cout << "- " << materias[i].getNombre() << " (Clave: " << materias[i].getClave() << "): ";
+            bool encontrada = false;
+            for (int j = 0; j < numCalificaciones; j++) {
+                if (calificaciones[j].getClaveMateria() == materias[i].getClave()) {
+                    cout << "Nota: " << calificaciones[j].getNota() 
+                         << " [" << calificaciones[j].getPeriodo() << "]";
+                    encontrada = true;
+                    break;
+                }
+            }
+            if (!encontrada) {
+                cout << "Sin calificacion registrada";
+            }
+            cout << endl;
+        }
+    }
+
+    float calcularPromedio() const {
+        if (numCalificaciones == 0) return 0.0f;
+        float suma = 0.0f;
+        for (int i = 0; i < numCalificaciones; i++) {
+            suma += calificaciones[i].getNota();
+        }
+        return suma / numCalificaciones;
+    }
+
+    void mostrar() const {
+        cout << "Nombre: " << nombre << " | Edad: " << edad 
+             << " | Materias: " << numMaterias 
+             << " | Calificaciones: " << numCalificaciones << endl;
+    }
+};
+
+int main() {
+    Alumno alumnos[10];
+    int numAlumnos = 0;
+    int opcion = 0;
+
+    do {
+        cout << "\n================ MENU DE GESTION ================" << endl;
+        cout << "1. Registrar Alumno" << endl;
+        cout << "2. Mostrar Alumno" << endl;
+        cout << "3. Mostrar Todos los Alumnos" << endl;
+        cout << "4. Modificar Alumno" << endl;
+        cout << "5. Eliminar Alumno" << endl;
+        cout << "6. Intercambiar Alumnos" << endl;
+        cout << "7. Agregar Materia a Alumno" << endl;
+        cout << "8. Registrar Calificacion a Alumno" << endl;
+        cout << "9. Mostrar Historial Academico" << endl;
+        cout << "10. Calcular Promedio de Alumno" << endl;
+        cout << "11. Salir" << endl;
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1: {
+                if (numAlumnos < 10) {
+                    string nombre;
+                    int edad;
+                    cout << "Ingrese nombre del alumno: ";
+                    cin.ignore();
+                    getline(cin, nombre);
+                    cout << "Ingrese edad del alumno: ";
+                    cin >> edad;
+                    alumnos[numAlumnos] = Alumno(nombre, edad);
+                    numAlumnos++;
+                    cout << "Alumno registrado con exito." << endl;
+                } else {
+                    cout << "Limite de alumnos alcanzado." << endl;
+                }
+                break;
+            }
+            case 2: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                int idx;
+                cout << "Ingrese indice del alumno (0 a " << numAlumnos - 1 << "): ";
+                cin >> idx;
+                if (idx >= 0 && idx < numAlumnos) {
+                    alumnos[idx].mostrar();
+                } else {
+                    cout << "Indice invalido." << endl;
+                }
+                break;
+            }
+            case 3: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                for (int i = 0; i < numAlumnos; i++) {
+                    cout << "[" << i << "] ";
+                    alumnos[i].mostrar();
+                }
+                break;
+            }
+            case 4: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                int idx;
+                cout << "Ingrese indice del alumno a modificar (0 a " << numAlumnos - 1 << "): ";
+                cin >> idx;
+                if (idx >= 0 && idx < numAlumnos) {
+                    string nombre;
+                    int edad;
+                    cout << "Nuevo nombre: ";
+                    cin.ignore();
+                    getline(cin, nombre);
+                    cout << "Nueva edad: ";
+                    cin >> edad;
+                    alumnos[idx].setNombre(nombre);
+                    alumnos[idx].setEdad(edad);
+                    cout << "Alumno modificado correctamente." << endl;
+                } else {
+                    cout << "Indice invalido." << endl;
+                }
+                break;
+            }
+            case 5: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                int idx;
+                cout << "Ingrese indice del alumno a eliminar (0 a " << numAlumnos - 1 << "): ";
+                cin >> idx;
+                if (idx >= 0 && idx < numAlumnos) {
+                    for (int i = idx; i < numAlumnos - 1; i++) {
+                        alumnos[i] = alumnos[i + 1];
+                    }
+                    numAlumnos--;
+                    cout << "Alumno eliminado." << endl;
+                } else {
+                    cout << "Indice invalido." << endl;
+                }
+                break;
+            }
+            case 6: {
+                if (numAlumnos < 2) {
+                    cout << "Se necesitan al menos 2 alumnos para intercambiar." << endl;
+                    break;
+                }
+                int i1, i2;
+                cout << "Ingrese indice del primer alumno: ";
+                cin >> i1;
+                cout << "Ingrese indice del segundo alumno: ";
+                cin >> i2;
+                if (i1 >= 0 && i1 < numAlumnos && i2 >= 0 && i2 < numAlumnos && i1 != i2) {
+                    Alumno temp = alumnos[i1];
+                    alumnos[i1] = alumnos[i2];
+                    alumnos[i2] = temp;
+                    cout << "Alumnos intercambiados correctamente." << endl;
+                } else {
+                    cout << "Indices invalidos o iguales." << endl;
+                }
+                break;
+            }
+            case 7: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                int idx;
+                cout << "Ingrese indice del alumno (0 a " << numAlumnos - 1 << "): ";
+                cin >> idx;
+                if (idx >= 0 && idx < numAlumnos) {
+                    string nombreM, claveM;
+                    int cr;
+                    cout << "Nombre de la materia: ";
+                    cin.ignore();
+                    getline(cin, nombreM);
+                    cout << "Clave de la materia: ";
+                    cin >> claveM;
+                    cout << "Creditos: ";
+                    cin >> cr;
+                    if (alumnos[idx].agregarMateria(Materia(nombreM, claveM, cr))) {
+                        cout << "Materia agregada correctamente." << endl;
+                    } else {
+                        cout << "Error: Limite alcanzado o clave duplicada." << endl;
+                    }
+                } else {
+                    cout << "Indice invalido." << endl;
+                }
+                break;
+            }
+            case 8: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                int idx;
+                cout << "Ingrese indice del alumno (0 a " << numAlumnos - 1 << "): ";
+                cin >> idx;
+                if (idx >= 0 && idx < numAlumnos) {
+                    string claveM, periodo;
+                    float nota;
+                    cout << "Clave de la materia: ";
+                    cin >> claveM;
+                    cout << "Calificacion (0 a 10): ";
+                    cin >> nota;
+                    cout << "Periodo (ej. 2024-1): ";
+                    cin >> periodo;
+                    if (alumnos[idx].registrarCalificacion(claveM, nota, periodo)) {
+                        cout << "Calificacion registrada." << endl;
+                    } else {
+                        cout << "Error: Materia no existe, nota invalida o limite alcanzado." << endl;
+                    }
+                } else {
+                    cout << "Indice invalido." << endl;
+                }
+                break;
+            }
+            case 9: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                int idx;
+                cout << "Ingrese indice del alumno (0 a " << numAlumnos - 1 << "): ";
+                cin >> idx;
+                if (idx >= 0 && idx < numAlumnos) {
+                    alumnos[idx].mostrarHistorial();
+                } else {
+                    cout << "Indice invalido." << endl;
+                }
+                break;
+            }
+            case 10: {
+                if (numAlumnos == 0) {
+                    cout << "No hay alumnos registrados." << endl;
+                    break;
+                }
+                int idx;
+                cout << "Ingrese indice del alumno (0 a " << numAlumnos - 1 << "): ";
+                cin >> idx;
+                if (idx >= 0 && idx < numAlumnos) {
+                    cout << "Promedio del alumno: " << alumnos[idx].calcularPromedio() << endl;
+                } else {
+                    cout << "Indice invalido." << endl;
+                }
+                break;
+            }
+            case 11:
+                cout << "Saliendo del programa..." << endl;
+                break;
+            default:
+                cout << "Opcion invalida." << endl;
+        }
+    } while (opcion != 11);
+
+    return 0;
+}
