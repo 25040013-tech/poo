@@ -1,0 +1,8 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Bienvenido al Sistema Escolar UTC" << endl;
+    return 0;
+}
+	
