@@ -1,0 +1,82 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+    int opcion;
+    
+    
+    string nombre = "No registrado";
+    int edad = 0;
+    string carrera = "No registrada";
+    
+   
+    double cal1 = 0, cal2 = 0, cal3 = 0, promedio = 0;
+
+   
+    cout << "===== MENU =====" << endl;
+    cout << "1 Registrar alumno" << endl;
+    cout << "2 Mostrar alumno" << endl;
+    cout << "3 Calcular promedio" << endl;
+    cout << "4 Salir" << endl;
+    cout << "Seleccione una opcion: ";
+    cin >> opcion;
+
+  
+    switch (opcion) {
+        case 1:
+            cin.ignore(); 
+            cout << "\n--- REGISTRAR ALUMNO ---" << endl;
+            cout << "Ingrese el Nombre: ";
+            getline(cin, nombre);
+            
+            cout << "Ingrese la Edad: ";
+            cin >> edad;
+            
+            cin.ignore();
+            cout << "Ingrese la Carrera: ";
+            getline(cin, carrera);
+            
+            cout << "\n¡Alumno registrado con exito!" << endl;
+            break;
+
+        case 2:
+            cout << "\n--- DATOS DEL ALUMNO ---" << endl;
+            cout << "Bienvenido " << nombre << endl;
+            cout << "Edad: " << edad << endl;
+            cout << "Carrera: " << carrera << endl;
+            break;
+
+        case 3:
+            cout << "\n--- CALCULAR PROMEDIO ---" << endl;
+            cout << "Ingrese la calificacion 1: ";
+            cin >> cal1;
+            
+            cout << "Ingrese la calificacion 2: ";
+            cin >> cal2;
+            
+            cout << "Ingrese la calificacion 3: ";
+            cin >> cal3;
+            
+           
+            promedio = (cal1 + cal2 + cal3) / 3.0;
+            
+            cout << "\n------------------------------------" << endl;
+            cout << "El promedio obtenido es: " << promedio << endl;
+            cout << "------------------------------------" << endl;
+            break;
+
+        case 4:
+            cout << "\nSaliendo del programa..." << endl;
+            break;
+
+        default:
+            cout << "\nOpcion no valida. Por favor seleccione una opcion entre 1 y 4." << endl;
+            break;
+    }
+
+    return 0;
+}
+
+
