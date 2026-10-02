@@ -1,0 +1,107 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Alumno {
+private:
+    string nombre;
+    int edad;
+    float promedio;
+
+public:
+    Alumno() : nombre(""), edad(0), promedio(0.0) {}
+
+    Alumno(string n, int e, float p) {
+        setNombre(n);
+        setEdad(e);
+        setPromedio(p);
+    }
+
+    const string& getNombre() const {
+        return nombre;
+    }
+
+    int getEdad() const {
+        return edad;
+    }
+
+    float getPromedio() const {
+        return promedio;
+    }
+
+    void setNombre(const string& n) {
+        if (!n.empty()) {
+            nombre = n;
+        } else {
+            cout << "[Advertencia] El nombre no puede estar vacio.\n";
+        }
+    }
+
+    void setEdad(int e) {
+        if (e >= 0 && e <= 120) {
+            edad = e;
+        } else {
+            cout << "[Advertencia] Edad invalida (" << e << "). Debe estar entre 0 y 120.\n";
+        }
+    }
+
+    void setPromedio(float p) {
+        if (p >= 0.0f && p <= 10.0f) {
+            promedio = p;
+        } else {
+            cout << "[Advertencia] Promedio invalido (" << p << "). Debe estar entre 0.0 y 10.0.\n";
+        }
+    }
+
+    void mostrarInformacion() const {
+        cout << "Nombre: " << getNombre() 
+             << " | Edad: " << getEdad() 
+             << " | Promedio: " << getPromedio() << endl;
+    }
+};
+
+void intercambiarAlumnos(Alumno& a, Alumno& b) {
+    Alumno temp = a;
+    a = b;
+    b = temp;
+}
+
+int main() {
+    cout << "=== SISTEMA DE GESTION DE ALUMNOS (ENCAPSULADO) ===\n\n";
+
+    vector<Alumno> alumnos;
+
+    Alumno a1;
+    a1.setNombre("Ana Lopez");
+    a1.setEdad(20);
+    a1.setPromedio(9.5);
+
+    Alumno a2("Carlos Ruiz", 22, 8.7);
+
+    alumnos.push_back(a1);
+    alumnos.push_back(a2);
+
+    cout << "--- Lista Inicial ---\n";
+    for (size_t i = 0; i < alumnos.size(); ++i) {
+        cout << i + 1 << ". " << alumnos[i].getNombre() 
+             << " - Edad: " << alumnos[i].getEdad() 
+             << " - Promedio: " << alumnos[i].getPromedio() << endl;
+    }
+
+    cout << "\n--- Prueba de Validaciones en Setters ---\n";
+    alumnos[0].setEdad(-5);
+    alumnos[0].setPromedio(15.0);
+
+    cout << "\n--- Intercambiando Alumno 1 y Alumno 2 ---\n";
+    intercambiarAlumnos(alumnos[0], alumnos[1]);
+
+    cout << "\n--- Lista Despues del Intercambio ---\n";
+    for (size_t i = 0; i < alumnos.size(); ++i) {
+        alumnos[i].mostrarInformacion();
+    }
+
+    return 0;
+}
+
