@@ -1,0 +1,134 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+
+const int MAX = 100;
+string nombres[MAX];
+int edades[MAX];
+double promedios[MAX];
+int cantidad = 0; 
+
+void registrarAlumno();
+void mostrarAlumno();
+void mostrarTodos();
+void calcularPromedio();
+void menu();
+
+int main() {
+    menu(); 
+    return 0;
+}
+
+
+void registrarAlumno() {
+    if (cantidad >= MAX) {
+        cout << "\n[ERROR] El sistema ha alcanzado el límite máximo de alumnos (" << MAX << ").\n";
+        return;
+    }
+
+    cout << "\n--- REGISTRAR ALUMNO ---" << endl;
+    cout << "Ingrese el nombre del alumno: ";
+    cin.ignore(); 
+    getline(cin, nombres[cantidad]);
+
+    cout << "Ingrese la edad: ";
+    cin >> edades[cantidad];
+
+    cout << "Ingrese el promedio general: ";
+    cin >> promedios[cantidad];
+
+    cantidad++; 
+    cout << "-> ¡Alumno registrado con éxito en el índice [" << cantidad - 1 << "]!\n";
+}
+
+
+void mostrarAlumno() {
+    if (cantidad == 0) {
+        cout << "\n[AVISO] No hay alumnos registrados todavía.\n";
+        return;
+    }
+
+    int pos;
+    cout << "\n--- MOSTRAR ALUMNO ---" << endl;
+    cout << "Ingrese el índice del alumno (0 a " << cantidad - 1 << "): ";
+    cin >> pos;
+
+    if (pos >= 0 && pos < cantidad) {
+        cout << "\nDatos del alumno [" << pos << "]:\n";
+        cout << "  Nombre:   " << nombres[pos] << endl;
+        cout << "  Edad:     " << edades[pos] << " años" << endl;
+        cout << "  Promedio: " << promedios[pos] << endl;
+    } else {
+        cout << "[ERROR] Índice fuera de rango válido.\n";
+    }
+}
+
+
+void mostrarTodos() {
+    if (cantidad == 0) {
+        cout << "\n[AVISO] No hay alumnos registrados para mostrar.\n";
+        return;
+    }
+
+    cout << "\n--- LISTA DE TODOS LOS ALUMNOS ---" << endl;
+    for (int i = 0; i < cantidad; i++) {
+        cout << "Índice [" << i << "] | Nombre: " << nombres[i] 
+             << " | Edad: " << edades[i] 
+             << " | Promedio: " << promedios[i] << endl;
+    }
+}
+
+
+void calcularPromedio() {
+    double cal1, cal2, cal3;
+    cout << "\n--- CALCULAR PROMEDIO ---" << endl;
+    cout << "Ingrese la primera calificación: ";
+    cin >> cal1;
+    cout << "Ingrese la segunda calificación: ";
+    cin >> cal2;
+    cout << "Ingrese la tercera calificación: ";
+    cin >> cal3;
+
+    double promedioCalculado = (cal1 + cal2 + cal3) / 3.0;
+    cout << "-> El promedio de las 3 calificaciones es: " << promedioCalculado << endl;
+}
+
+
+void menu() {
+    int opcion;
+    do {
+        cout << "\n=================================" << endl;
+        cout << "        MENÚ DE OPCIONES         " << endl;
+        cout << "=================================" << endl;
+        cout << "1. Registrar alumno" << endl;
+        cout << "2. Mostrar datos de un alumno" << endl;
+        cout << "3. Mostrar todos los alumnos" << endl;
+        cout << "4. Calcular promedio (3 notas)" << endl;
+        cout << "5. Salir" << endl;
+        cout << "Seleccione una opción: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                registrarAlumno();
+                break;
+            case 2:
+                mostrarAlumno();
+                break;
+            case 3:
+                mostrarTodos();
+                break;
+            case 4:
+                calcularPromedio();
+                break;
+            case 5:
+                cout << "\nSaliendo del programa... ¡Hasta luego!\n";
+                break;
+            default:
+                cout << "\n[ERROR] Opción no válida. Intente de nuevo.\n";
+                break;
+        }
+    } while (opcion != 5);
+}
