@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universidad Tecnológica de Culiacán</title>
+</head>
+<body>
+
+    <header>
+        <img src="img/logo.png" alt="Logo Universidad Tecnológica de Culiacán" width="250">
+        <h1>Universidad Tecnológica de Culiacán</h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#registro">Registrar alumno</a></li>
+            <li><a href="#lista">Lista de alumnos</a></li>
+            <li><a href="#resumen">Resumen</a></li>
+        </ul>
+    </nav>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <h2>Panel</h2>
+            <ul>
+                <li><a href="#">Alumnos</a></li>
+                <li><a href="#">Maestros</a></li>
+                <li><a href="#">Administradores</a></li>
+            </ul>
+        </aside>
+
+        <main class="contenido">
+            <section id="registro">
+                <h2>Registrar alumno</h2>
+                <form id="form-alumno" action="#" method="post">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ingresa el nombre" required>
+
+                    <label for="matricula">Matricula:</label>
+                    <input type="text" id="matricula" name="matricula" placeholder="Ej. A001" required>
+
+                    <label for="edad">Edad:</label>
+                    <input type="number" id="edad" name="edad" min="0" max="120" required>
+
+                    <label for="correo">Correo:</label>
+                    <input type="email" id="correo" name="correo" placeholder="alumno@escuela.com" required>
+
+                    <label for="fechaInscripcion">Fecha de inscripcion:</label>
+                    <input type="date" id="fechaInscripcion" name="fechaInscripcion" required>
+
+                    <button type="submit">Registrar</button>
+                    <button type="reset" id="btn-limpiar">Limpiar</button>
+                </form>
+            </section>
+
+            <section id="lista">
+                <h2>Lista de alumnos</h2>
+                <table id="tabla-alumnos" border="1">
+                    <thead>
+                        <tr>
+                            <th>Matricula</th>
+                            <th>Nombre</th>
+                            <th>Edad</th>
+                            <th>Correo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="resumen" class="tarjetas">
+                <div class="card">
+                    <h3>Total alumnos</h3>
+                    <p id="total-alumnos">0</p>
+                </div>
+                <div class="card">
+                    <h3>Promedio general</h3>
+                    <p id="promedio-general">-</p>
+                </div>
+                <div class="card">
+                    <h3>Ultimo registrado</h3>
+                    <p id="ultimo-alumno">-</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+    </footer>
+
+
+    <script>
+        const form = document.getElementById('form-alumno');
+        const tablaBody = document.querySelector('#tabla-alumnos tbody');
+        const totalAlumnosElem = document.getElementById('total-alumnos');
+        const ultimoAlumnoElem = document.getElementById('ultimo-alumno');
+        
+        let totalAlumnos = 0;
+
+        form.addEventListener('submit', function(event) {
+         
+            event.preventDefault();
+
+
+            const nombre = document.getElementById('nombre').value;
+            const matricula = document.getElementById('matricula').value;
+            const edad = document.getElementById('edad').value;
+            const correo = document.getElementById('correo').value;
+
+            
+            const nuevaFila = document.createElement('tr');
+            nuevaFila.innerHTML = `
+                <td>${matricula}</td>
+                <td>${nombre}</td>
+                <td>${edad}</td>
+                <td>${correo}</td>
+                <td><button type="button" onclick="eliminarFila(this)">Eliminar</button></td>
+            `;
+
+
+            tablaBody.appendChild(nuevaFila);
+
+            
+            totalAlumnos++;
+            totalAlumnosElem.textContent = totalAlumnos;
+            ultimoAlumnoElem.textContent = nombre;
+
+            
+            form.reset();
+        });
+
+        
+        function eliminarFila(boton) {
+            const fila = boton.closest('tr');
+            fila.remove();
+            
+            totalAlumnos--;
+            totalAlumnosElem.textContent = totalAlumnos;
+            if (totalAlumnos === 0) {
+                ultimoAlumnoElem.textContent = '-';
+            }
+        }
+    </script>
+</body>
+</html>
